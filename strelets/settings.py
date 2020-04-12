@@ -32,12 +32,15 @@ ALLOWED_HOSTS = ['*']
 # Application definition
 
 INSTALLED_APPS = [
+    'jet.dashboard',
+    'jet',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_extensions',
     'rest_framework',
     'hotel',
 ]
@@ -52,7 +55,70 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_USE_TLS = True
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'rock.kikko@gmail.com'
+EMAIL_HOST_PASSWORD = 'cvbn.lina.123.'
+
 ROOT_URLCONF = 'strelets.urls'
+
+JET_INDEX_DASHBOARD = 'dashboard.CustomIndexDashboard'
+
+JET_SIDE_MENU_COMPACT = True
+
+
+JET_THEMES = [
+    {
+        'theme': 'default', # theme folder name
+        'color': '#47bac1', # color of the theme's button in user menu
+        'title': 'Default' # theme title
+    },
+    {
+        'theme': 'green',
+        'color': '#44b78b',
+        'title': 'Green'
+    },
+    {
+        'theme': 'light-green',
+        'color': '#2faa60',
+        'title': 'Light Green'
+    },
+    {
+        'theme': 'light-violet',
+        'color': '#a464c4',
+        'title': 'Light Violet'
+    },
+    {
+        'theme': 'light-blue',
+        'color': '#5EADDE',
+        'title': 'Light Blue'
+    },
+    {
+        'theme': 'light-gray',
+        'color': '#222',
+        'title': 'Light Gray'
+    }
+]
+
+
+JET_SIDE_MENU_ITEMS = [
+    {'app_label': 'hotel', 'items': [
+        {'name': 'booking'},
+        {'name': 'room'},
+        {'name': 'review'},
+        {'name': 'employee'},
+        {'name': 'services'},
+    ]},
+    {'app_label': 'auth', 'items': [
+        {'name': 'group'},
+        {'name': 'user'},
+    ]},
+]
+
+
+JET_APP_INDEX_DASHBOARD = 'jet.dashboard.dashboard.DefaultAppIndexDashboard'
 
 TEMPLATES = [
     {
@@ -125,4 +191,4 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
 STATIC_URL = '/static/'
-
+STATIC_ROOT = 'staticfiles/'

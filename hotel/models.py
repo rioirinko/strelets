@@ -1,20 +1,17 @@
 from django.db import models
 from hotel.validators import validate_number
 
-STATUS_CHOICES = (
-    (1, 'СТАНДАРТНЫЙ'),
-    (2, 'ЭКОНОМ'),
-    (3, 'ПОЛУЛЮКС'),
-    (4, 'ЛЮКС'),
-)
-
 
 class Room(models.Model):
-    number = models.IntegerField(verbose_name='Номер')
-    number_of_places = models.IntegerField(verbose_name='Кол-во мест')
-    type_of_number = models.IntegerField(choices=STATUS_CHOICES, default=1, verbose_name='Тип номера')
+    name = models.CharField(max_length=100, verbose_name='Номер')
     price = models.IntegerField(verbose_name='Стоимость')
+    description = models.CharField(max_length=500, verbose_name='Описание')
     image = models.ImageField(upload_to='media/', max_length=500, null=True, blank=True, verbose_name='Фото')
+    number_of_places = models.CharField(max_length=250, verbose_name='Количество мест')
+    free = models.BooleanField(default=True, verbose_name='Свободный')
+
+    def __str__(self):
+        return self.name
 
     class Meta:
         verbose_name = 'Номер'
@@ -43,41 +40,52 @@ class Employee(models.Model):
         verbose_name_plural = 'Сотрудники'
 
 
-class Customer(models.Model):
-    name = models.CharField(max_length=300, verbose_name='ФИО')
-    passport = models.CharField(max_length=50, verbose_name='Паспорт')
-    phone = models.CharField(validators=validate_number(), max_length=13, verbose_name='Телефон')
-    address = models.CharField(max_length=200, verbose_name='Адрес')
-    number = models.ForeignKey(Room, related_name='customer', on_delete=models.CASCADE, verbose_name='Номер')
-    employee = models.ForeignKey(Employee, related_name='population_data', on_delete=models.CASCADE,
-                                 verbose_name='Сотрудник')
-    arrival_date = models.DateField(verbose_name='Дата въезда')
-    date_of_departure = models.DateField(verbose_name='Дата выезда')
-    total_sum = models.CharField(max_length=50, verbose_name='Оплата')
+# class Customer(models.Model):
+#     name = models.CharField(max_length=300, verbose_name='ФИО')
+#     passport = models.CharField(max_length=50, verbose_name='Паспорт')
+#     phone = models.CharField(validators=validate_number(), max_length=13, verbose_name='Телефон')
+#
+#     def __str__(self):
+#         return self.name
+#
+#     class Meta:
+#         verbose_name = 'Клиент'
+#         verbose_name_plural = 'Клиенты'
+
+
+class Services(models.Model):
+    description = models.CharField(max_length=250, verbose_name='Описание')
 
     def __str__(self):
-        return self.name
+        return self.description
 
     class Meta:
-        verbose_name = 'Клиент'
-        verbose_name_plural = 'Клиенты'
+        verbose_name = 'Услуга'
+        verbose_name_plural = 'Услуги'
 
 
-class Cleaning(models.Model):
-    number = models.ForeignKey(Room, related_name='cle', on_delete=models.CASCADE)
-    employee = models.ForeignKey(Employee, related_name='cla', on_delete=models.CASCADE)
-    cleaning = models.BooleanField(default=False)
+BOOKING_CHOICES = (
+    (1, 'Да'),
+    (2, 'Нет'),
+)
 
-    class Meta:
-        verbose_name = 'Уборка'
-        verbose_name_plural = 'Уборка'
+PAYMENT_CHOICES = (
+    (1, 'Наличные'),
+    (2, 'Онлайн'),
+)
 
 
 class Booking(models.Model):
-    name = models.CharField(max_length=300)
-    phone = models.CharField(validators=validate_number(), max_length=13, verbose_name='Телефон')
-    number = models.ForeignKey(Room, related_name='booking', on_delete=models.CASCADE)
+    name = models.CharField(max_length=250, verbose_name='Имя')
+    number = models.ForeignKey(Room, related_name='booking', on_delete=models.CASCADE, verbose_name='Номер')
+    phone = models.CharField(validators=validate_number(), max_length=13, verbose_name='Номер телефона')
+    mail = models.EmailField(max_length=254, verbose_name='E-mail')
+    service = models.IntegerField(choices=BOOKING_CHOICES, default=1, verbose_name='Трансфер с аэропорта')
     arrival_date = models.DateField(verbose_name='Дата въезда')
+    date_of_departure = models.DateField(verbose_name='Дата выезда')
+    payment = models.IntegerField(choices=PAYMENT_CHOICES, default=1, verbose_name='Способ оплаты')
+    price = models.CharField(max_length=250, verbose_name='Цена за номер')
+    comment = models.CharField(max_length=250, verbose_name='Комментарии')
 
     def __str__(self):
         return self.name
@@ -85,3 +93,15 @@ class Booking(models.Model):
     class Meta:
         verbose_name = 'Бронирование'
         verbose_name_plural = 'Бронирование'
+
+
+class Review(models.Model):
+    name = models.CharField(max_length=250, verbose_name='Имя')
+    comment = models.CharField(max_length=500, verbose_name='Отзыв')
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = 'Отзыв'
+        verbose_name_plural = 'Отзывы'

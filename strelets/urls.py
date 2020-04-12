@@ -16,14 +16,12 @@ Including another URLconf
 from django.conf.urls import url
 from django.contrib import admin
 from django.urls import include
-from hotel import views
+
 
 urlpatterns = [
+    url(r'^jet/', include('jet.urls', 'jet')),
+    url(r'^jet/dashboard/', include('jet.dashboard.urls', 'jet-dashboard')),
     url(r'^admin/', admin.site.urls),
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
-    url(r'^customer/$', views.CustomerViewSet.as_view(), name='Customer'),
-    url(r'^room/$', views.RoomViewSet.as_view(), name='Room'),
-    url(r'^clean/$', views.CleanViewSet.as_view(), name='Clean'),
-    url(r'^employee/$', views.EmployeeViewSet.as_view(), name='Employee'),
-    url(r'^booking/$', views.BookingViewSet.as_view(), name='Booking'),
+    url(r'^hotel/', include('hotel.urls')),
 ]
