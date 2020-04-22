@@ -84,7 +84,7 @@ class Booking(models.Model):
     arrival_date = models.DateField(verbose_name='Дата въезда')
     date_of_departure = models.DateField(verbose_name='Дата выезда')
     payment = models.IntegerField(choices=PAYMENT_CHOICES, default=1, verbose_name='Способ оплаты')
-    price = models.CharField(max_length=250, verbose_name='Цена за номер')
+    price = models.IntegerField(null=True, verbose_name='Цена за номер')
     comment = models.CharField(max_length=250, verbose_name='Комментарии')
 
     def __str__(self):

@@ -1,34 +1,24 @@
+from django.db.models import F
 from django_filters.rest_framework import DjangoFilterBackend, filters
-from rest_framework import generics
 from rest_framework.filters import SearchFilter, OrderingFilter
-
-from strelets import settings
+from rest_framework import generics, status
+from rest_framework.exceptions import ValidationError
+from rest_framework.response import Response
+from .methods import send_email_with_user, update_room_status, calculate_price
 from .serializers import *
 from .models import *
-from django.core.mail import send_mail
-from rest_framework.views import APIView
-
-
-# class FreeRoom(APIView):
-#     queryset = Room.objects.filter(free=True)
-#     serializers = RoomSerializer
-#
-#     def put(self, request, *args, **kwargs):
-#         room_id = int(self.kwargs.get('room_id'))
-#         Room.objects.filter(id=room_id).update(free=False)
 
 
 class RoomViewSet(generics.ListAPIView):
     queryset = Room.objects.all().filter(free=True)
     serializer_class = RoomSerializer
-    filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
-    search_fields = ['name']
-    filterset_fields = ['name']
-    ordering_fields = '__all__'
+    # filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
+    # search_fields = ['name']
+    # filterset_fields = ['name']
     ordering = ['id']
 
 
-class RoomDetailViewSet(generics.ListAPIView):
+class RoomDetailViewSet(generics.RetrieveAPIView):
     queryset = Room.objects.all()
     serializer_class = RoomDetailSerializer
 
@@ -43,14 +33,22 @@ class ServicesViewSet(generics.ListAPIView):
     serializer_class = ServicesSerializer
 
 
-class BookingViewSet(generics.ListCreateAPIView):
+class BookingViewSet(generics.CreateAPIView):
     queryset = Booking.objects.all()
     serializer_class = BookingSerializer
 
-    def email_to_clients(self, request):
-        subject = 'Гостиница'
-        message = 'Номер забронирован!'
-        email_from = settings.EMAIL_HOST_USER
-        email = self.request.data['mail']
-        send_mail(subject, message, email_from, email)
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        try:
+            serializer.is_valid(raise_exception=True)
+            update_room_status(request.data['number'])
+            sum_ = calculate_price(request.data['number'], request.data['arrival_date'],
+                                   request.data['date_of_departure'])
+            send_email_with_user(request.data['mail'], request.data['name'],
+                                 request.data['arrival_date'], request.data['date_of_departure'], sum_)
 
+        except ValidationError as e:
+            return Response({'message': e.detail}, status=400)
+
+        self.perform_create(serializer)
+        return Response({'Message': f'Сумма за номер составит {sum_}'}, status=status.HTTP_201_CREATED)

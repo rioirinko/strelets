@@ -45,17 +45,17 @@ class ServicesSerializer(serializers.ModelSerializer):
 
 
 class BookingSerializer(serializers.ModelSerializer):
-    # price = serializers.SerializerMethodField()
-    #
-    # def get_total_sum(self, request):
-    #     d = request.date_of_departure - request.arrival_date
-    #     sum = d.days * request.room.price
-    #     return sum
     class Meta:
         model = Booking
         fields = ('id', 'name', 'number',  'phone', 'mail', 'service', 'arrival_date', 'date_of_departure', 'payment',
-                  'price', 'comment',)
+                  'comment',)
 
+#
+# class BookingSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = Booking
+#         fields = ('id', 'name', 'number',  'phone', 'mail', 'service', 'arrival_date', 'date_of_departure', 'payment',
+#                   'price', 'comment',)
 
 class ReviewSerializer(serializers.ModelSerializer):
 
