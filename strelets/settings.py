@@ -156,7 +156,7 @@ WSGI_APPLICATION = 'strelets.wsgi.application'
 
 DATABASES = {
     'default': {
-            'ENGINE': config('DB_ENGINE'),
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',
             'NAME': config('DB_NAME'),
             'USER': config('DB_USER'),
             'PASSWORD': config('DB_PASSWORD'),
