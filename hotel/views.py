@@ -12,9 +12,6 @@ from .models import *
 class RoomViewSet(generics.ListAPIView):
     queryset = Room.objects.all().filter(free=True)
     serializer_class = RoomSerializer
-    # filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
-    # search_fields = ['name']
-    # filterset_fields = ['name']
     ordering = ['id']
 
 

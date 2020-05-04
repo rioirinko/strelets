@@ -19,8 +19,8 @@ from django.urls import include
 
 
 urlpatterns = [
-    url(r'^jet/', include('jet.urls', 'jet')),
     url(r'^jet/dashboard/', include('jet.dashboard.urls', 'jet-dashboard')),
+    url(r'^jet/', include('jet.urls', 'jet')),
     url(r'^admin/', admin.site.urls),
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     url(r'^auth/', include('djoser.urls')),
