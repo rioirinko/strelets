@@ -1,8 +1,6 @@
-from django.db.models import F
-from django_filters.rest_framework import DjangoFilterBackend, filters
-from rest_framework.filters import SearchFilter, OrderingFilter
 from rest_framework import generics, status
 from rest_framework.exceptions import ValidationError
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from .methods import send_email_with_user, update_room_status, calculate_price
 from .serializers import *
@@ -23,11 +21,17 @@ class RoomDetailViewSet(generics.RetrieveAPIView):
 class ReviewViewSet(generics.ListCreateAPIView):
     queryset = Review.objects.all()
     serializer_class = ReviewSerializer
+    permission_classes = (IsAuthenticated,)
 
 
 class ServicesViewSet(generics.ListAPIView):
     queryset = Services.objects.all()
     serializer_class = ServicesSerializer
+
+
+class QuestionsViewSet(generics.CreateAPIView):
+    queryset = Questions.objects.all()
+    serializer_class = QuestionsSerializer
 
 
 class BookingViewSet(generics.CreateAPIView):

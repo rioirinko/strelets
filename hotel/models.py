@@ -1,6 +1,6 @@
 from django.db import models
 from hotel.validators import validate_number
-
+from django.core import validators
 
 YESNO_CHOICES = (
     (1, 'Да'),
@@ -66,6 +66,20 @@ class Services(models.Model):
         verbose_name_plural = 'Услуги'
 
 
+class Questions(models.Model):
+    name = models.CharField(max_length=250, verbose_name='ФИО')
+    mail = models.EmailField(validators=[validators.validate_email], unique=True, blank=False, verbose_name='E-mail')
+    message_subject = models.CharField(max_length=100, verbose_name='Тема сообщения')
+    question = models.CharField(max_length=1000, verbose_name='Сообщение')
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = 'Вопрос'
+        verbose_name_plural = 'Вопросы'
+
+
 PAYMENT_CHOICES = (
     (1, 'Наличные'),
     (2, 'Онлайн'),
@@ -73,11 +87,11 @@ PAYMENT_CHOICES = (
 
 
 class Booking(models.Model):
-    name = models.CharField(max_length=250, verbose_name='Имя')
+    name = models.CharField(max_length=250, verbose_name='ФИО')
     number = models.ForeignKey(Room, related_name='booking', on_delete=models.CASCADE, verbose_name='Номер')
     phone = models.CharField(validators=validate_number(), max_length=13, verbose_name='Номер телефона')
     passport = models.CharField(max_length=50, verbose_name='Паспорт')
-    mail = models.EmailField(max_length=254, verbose_name='E-mail')
+    mail = models.EmailField(validators=[validators.validate_email], unique=True, blank=False, verbose_name='E-mail')
     service = models.IntegerField(choices=YESNO_CHOICES, default=1, verbose_name='Трансфер с аэропорта')
     arrival_date = models.DateField(verbose_name='Дата въезда')
     date_of_departure = models.DateField(verbose_name='Дата выезда')

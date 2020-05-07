@@ -36,3 +36,10 @@ class ReviewSerializer(serializers.ModelSerializer):
     class Meta:
         model = Review
         fields = ('id', 'name', 'comment',)
+
+
+class QuestionsSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Questions
+        fields = ('id', 'name', 'mail', 'message_subject', 'question',)

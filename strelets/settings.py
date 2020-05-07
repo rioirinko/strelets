@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/3.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.0/ref/settings/
 """
-
+import datetime
 import os
 from decouple import config
 import django_heroku
@@ -44,12 +44,12 @@ INSTALLED_APPS = [
     'django_extensions',
     'corsheaders',
     'rest_framework',
-    'rest_framework.authtoken',
-    'djoser',
-    # 'django_filters',
 
     'hotel.apps.HotelConfig',
+    'base_user',
 ]
+
+AUTH_USER_MODEL = 'base_user.User'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -65,11 +65,20 @@ MIDDLEWARE = [
 CORS_ORIGIN_ALLOW_ALL = True
 
 REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
-        'rest_framework.authentication.TokenAuthentication',
+    # "DATE_INPUT_FORMATS": [("%dd.%mm.%YYYY"),],
+    'DEFAULT_RENDERER_CLASSES': (
+        'rest_framework.renderers.JSONRenderer',
+        'rest_framework.renderers.BrowsableAPIRenderer',
     ),
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+    ],
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'base_user.backends.JWTAuthentication',
+        )
 }
+
+REST_USE_JWT = True
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = config('EMAIL_HOST')
@@ -95,6 +104,9 @@ JET_THEMES = [
 
 
 JET_SIDE_MENU_ITEMS = [
+    {'app_label': 'base_user', 'items': [
+        {'name': 'user'},
+    ]},
     {'app_label': 'hotel', 'items': [
         {'name': 'booking'},
         {'name': 'room'},
@@ -104,9 +116,9 @@ JET_SIDE_MENU_ITEMS = [
     ]},
     {'app_label': 'auth', 'items': [
         {'name': 'group'},
-        {'name': 'user'},
     ]},
 ]
+
 
 
 JET_APP_INDEX_DASHBOARD = 'jet.dashboard.dashboard.DefaultAppIndexDashboard'
@@ -164,6 +176,7 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 
+
 # Internationalization
 # https://docs.djangoproject.com/en/2.2/topics/i18n/
 
@@ -176,7 +189,6 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
