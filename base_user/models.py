@@ -5,20 +5,22 @@ from django.conf import settings
 from django.contrib.auth.base_user import BaseUserManager
 from django.db import models
 from django.core import validators
-from django.contrib.auth.models import AbstractBaseUser
-from django.contrib.auth.models import PermissionsMixin
+from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 
 
 class UserManager(BaseUserManager):
     def _create_user(self, email, password=None, **extra_fields):
+
         if not email:
-            raise ValueError('Данный адрес электронной почты должен быть установлен')
+            raise ValueError("Невозможно создать пользователя без электронной почты")
+
+        if not password:
+            raise ValueError("Невозможно создать пользователя без пароля")
 
         email = self.normalize_email(email)
-        user = self.model(email=email, **extra_fields)
+        user = self.model(email=email, password=password, **extra_fields)
         user.set_password(password)
         user.save(using=self._db)
-
         return user
 
     def create_user(self, email, password=None, **extra_fields):
@@ -57,6 +59,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     birthday = models.DateField(verbose_name='День рождение')
     country = models.CharField(max_length=250, verbose_name='Страна проживания')
     passport = models.CharField(max_length=250, verbose_name='Номер паспорта')
+    points = models.IntegerField(verbose_name='Баллы')
     is_staff = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
 
@@ -84,3 +87,8 @@ class User(AbstractBaseUser, PermissionsMixin):
             'exp': int(dt.strftime('%s'))
         }, settings.SECRET_KEY, algorithm='HS256')
         return token.decode('utf-8')
+
+    class Meta:
+        app_label = 'base_user'
+        verbose_name = 'Пользователь'
+        verbose_name_plural = 'Пользователи'

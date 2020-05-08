@@ -25,10 +25,6 @@ def calculate_price(number, arrival, departure):
     d1 = datetime.strptime(arrival, '%Y-%m-%d')
     d2 = datetime.strptime(departure, '%Y-%m-%d')
     date = d2 - d1
-    # if request.user.is_authenticated():
-    #     sum_ = ((date.days * price) * 10) / 100
-    #     return sum_
-    # else:
     sum_ = date.days * price
     return sum_
 

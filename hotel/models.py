@@ -80,12 +80,6 @@ class Questions(models.Model):
         verbose_name_plural = 'Вопросы'
 
 
-PAYMENT_CHOICES = (
-    (1, 'Наличные'),
-    (2, 'Онлайн'),
-)
-
-
 class Booking(models.Model):
     name = models.CharField(max_length=250, verbose_name='ФИО')
     number = models.ForeignKey(Room, related_name='booking', on_delete=models.CASCADE, verbose_name='Номер')
@@ -95,7 +89,6 @@ class Booking(models.Model):
     service = models.IntegerField(choices=YESNO_CHOICES, default=1, verbose_name='Трансфер с аэропорта')
     arrival_date = models.DateField(verbose_name='Дата въезда')
     date_of_departure = models.DateField(verbose_name='Дата выезда')
-    payment = models.IntegerField(choices=PAYMENT_CHOICES, default=1, verbose_name='Способ оплаты')
     price = models.IntegerField(null=True, verbose_name='Цена за номер')
     comment = models.CharField(max_length=250, verbose_name='Комментарии')
     reservation = models.BooleanField(default=False, verbose_name='Подтвердить бронь')
