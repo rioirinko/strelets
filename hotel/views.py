@@ -1,5 +1,6 @@
 import datetime
 
+from django.contrib.auth import get_user_model
 from django.db.models import F
 from rest_framework import generics, status
 from rest_framework.exceptions import ValidationError
@@ -7,10 +8,11 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.viewsets import ReadOnlyModelViewSet
 
-from base_user.models import User
 from .methods import send_email_with_user, update_room_status, calculate_price
 from .serializers import *
 from .models import *
+
+User = get_user_model()
 
 
 class RoomViewSet(generics.ListAPIView):

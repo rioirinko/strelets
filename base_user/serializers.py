@@ -1,27 +1,28 @@
 from django.contrib.auth import authenticate, get_user_model
 from rest_framework import serializers
-from .models import User
+
+
+User = get_user_model()
 
 
 class RegistrationSerializer(serializers.ModelSerializer):
-    password = serializers.CharField(write_only=True,)
     token = serializers.CharField(max_length=255, read_only=True)
 
     class Meta:
         model = User
         fields = ('username', 'email', 'gender', 'birthday', 'country', 'passport', 'password',
-                  'password_repeat', 'token',)
+                  'token', )
 
     def create(self, validated_data):
         return User.objects.create_user(**validated_data)
 
-    def is_valid(self, raise_exception=False):
-        is_valid = super().is_valid(raise_exception=True)
-
-        if self.validated_data['password'] != self.validated_data['password_repeat']:
-            raise serializers.ValidationError(detail='Ваши пароли не совпадают')
-
-        return is_valid
+    # def is_valid(self, raise_exception=False):
+    #     is_valid = super().is_valid(raise_exception=True)
+    #
+    #     if self.validated_data['password'] != self.validated_data['password_repeat']:
+    #         raise serializers.ValidationError(detail='Ваши пароли не совпадают')
+    #
+    #     return is_valid
 
 
 class LoginSerializer(serializers.Serializer):
