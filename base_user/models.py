@@ -26,7 +26,7 @@ class BaseUser(AbstractUser):
     birthday = models.DateField(verbose_name='День рождение', null=True, blank=True)
     country = models.CharField(max_length=250, verbose_name='Страна проживания')
     passport = models.CharField(max_length=250, verbose_name='Номер паспорта')
-    points = models.IntegerField(verbose_name='Баллы', null=True, blank=True)
+    points = models.IntegerField(verbose_name='Баллы', null=True, blank=True, default=0)
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
