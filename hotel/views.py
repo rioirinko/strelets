@@ -70,12 +70,12 @@ class BookingViewSet(generics.CreateAPIView):
                 )
 
 
-class UserBookingViewSet(ReadOnlyModelViewSet):
-    queryset = Booking.objects.all()
-    serializer_class = BookingSerializer
-
-    def list(self, request, *args, **kwargs):
-        queryset = Booking.objects.filter(user=request.user)
-        self.queryset = queryset
-        self.serializer_class = BookingSerializer
-        return super().list(request, *args, **kwargs)
+# class UserBookingViewSet(ReadOnlyModelViewSet):
+#     queryset = Booking.objects.all()
+#     serializer_class = BookingSerializer
+#
+#     def list(self, request, *args, **kwargs):
+#         queryset = Booking.objects.filter(user=request.user)
+#         self.queryset = queryset
+#         self.serializer_class = BookingSerializer
+#         return super().list(request, *args, **kwargs)
