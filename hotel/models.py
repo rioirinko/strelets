@@ -1,6 +1,9 @@
+from django.contrib.auth import get_user_model
 from django.db import models
 from hotel.validators import validate_number
 from django.core import validators
+
+User = get_user_model()
 
 YESNO_CHOICES = (
     (1, 'Да'),
@@ -68,7 +71,7 @@ class Services(models.Model):
 
 class Questions(models.Model):
     name = models.CharField(max_length=250, verbose_name='ФИО')
-    mail = models.EmailField(validators=[validators.validate_email], unique=True, blank=False, verbose_name='E-mail')
+    mail = models.EmailField(validators=[validators.validate_email], blank=False, verbose_name='E-mail')
     message_subject = models.CharField(max_length=100, verbose_name='Тема сообщения')
     question = models.CharField(max_length=1000, verbose_name='Сообщение')
 
@@ -81,11 +84,12 @@ class Questions(models.Model):
 
 
 class Booking(models.Model):
+    user = models.ForeignKey(User, on_delete=models.DO_NOTHING, verbose_name='Пользователь', null=True, blank=True)
     name = models.CharField(max_length=250, verbose_name='ФИО')
     number = models.ForeignKey(Room, related_name='booking', on_delete=models.CASCADE, verbose_name='Номер')
     phone = models.CharField(validators=validate_number(), max_length=13, verbose_name='Номер телефона')
     passport = models.CharField(max_length=50, verbose_name='Паспорт')
-    mail = models.EmailField(validators=[validators.validate_email], unique=True, blank=False, verbose_name='E-mail')
+    mail = models.EmailField(validators=[validators.validate_email], blank=False, verbose_name='E-mail')
     service = models.IntegerField(choices=YESNO_CHOICES, default=1, verbose_name='Трансфер с аэропорта')
     arrival_date = models.DateField(verbose_name='Дата въезда')
     date_of_departure = models.DateField(verbose_name='Дата выезда')

@@ -25,10 +25,12 @@ class ServicesSerializer(serializers.ModelSerializer):
 
 
 class BookingSerializer(serializers.ModelSerializer):
+    user = serializers.PrimaryKeyRelatedField(many=False, read_only=True)
+
     class Meta:
         model = Booking
-        fields = ('id', 'name', 'number',  'phone', 'passport', 'mail', 'service', 'arrival_date',
-                  'date_of_departure', 'payment', 'comment',)
+        fields = ('id', 'user', 'name', 'number',  'phone', 'passport', 'mail', 'service', 'arrival_date',
+                  'date_of_departure', 'comment',)
 
 
 class ReviewSerializer(serializers.ModelSerializer):

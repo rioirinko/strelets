@@ -12,7 +12,7 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 import datetime
 import os
 from decouple import config
-import django_heroku
+# import django_heroku
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -45,11 +45,12 @@ INSTALLED_APPS = [
     'corsheaders',
     'rest_framework',
 
-    'hotel.apps.HotelConfig',
     'base_user',
+    'hotel.apps.HotelConfig',
+
 ]
 
-AUTH_USER_MODEL = 'base_user.User'
+AUTH_USER_MODEL = 'base_user.BaseUser'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -65,7 +66,7 @@ MIDDLEWARE = [
 CORS_ORIGIN_ALLOW_ALL = True
 
 REST_FRAMEWORK = {
-    # "DATE_INPUT_FORMATS": [("%dd.%mm.%YYYY"),],
+    "DATE_INPUT_FORMATS": ["%d.%m.%Y", ],
     'DEFAULT_RENDERER_CLASSES': (
         'rest_framework.renderers.JSONRenderer',
         'rest_framework.renderers.BrowsableAPIRenderer',
@@ -89,7 +90,7 @@ EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
 
 ROOT_URLCONF = 'strelets.urls'
 
-JET_INDEX_DASHBOARD = 'dashboard.CustomIndexDashboard'
+# JET_INDEX_DASHBOARD = 'dashboard.CustomIndexDashboard'
 
 JET_SIDE_MENU_COMPACT = True
 
@@ -105,10 +106,11 @@ JET_THEMES = [
 
 JET_SIDE_MENU_ITEMS = [
     {'app_label': 'base_user', 'items': [
-        {'name': 'user'},
+        {'name': 'baseuser'},
     ]},
     {'app_label': 'hotel', 'items': [
         {'name': 'booking'},
+        {'name': 'questions'},
         {'name': 'room'},
         {'name': 'review'},
         {'name': 'employee'},
@@ -118,6 +120,7 @@ JET_SIDE_MENU_ITEMS = [
         {'name': 'group'},
     ]},
 ]
+
 
 
 
@@ -196,4 +199,4 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATIC_ROOT = 'staticfiles/'
 
-django_heroku.settings(locals())
+# django_heroku.settings(locals())
