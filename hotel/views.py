@@ -72,9 +72,10 @@ class BookingViewSet(generics.CreateAPIView):
         return Response({'Message': f'Сумма за номер составит {sum_}'}, status=status.HTTP_201_CREATED)
 
 
-class UserBookingViewSet(ReadOnlyModelViewSet):
+class UserBookingViewSet(generics.ListAPIView):
     queryset = Booking.objects.all()
     serializer_class = BookingSerializer
+    permission_classes = (IsAuthenticated,)
 
     def list(self, request, *args, **kwargs):
         queryset = Booking.objects.filter(user=request.user)
