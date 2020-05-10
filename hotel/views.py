@@ -23,10 +23,16 @@ class RoomDetailViewSet(generics.RetrieveAPIView):
     permission_classes = [AllowAny]
 
 
-class ReviewViewSet(generics.ListCreateAPIView):
+class CreateReviewViewSet(generics.CreateAPIView):
     queryset = Review.objects.all()
     serializer_class = ReviewSerializer
     permission_classes = (IsAuthenticated,)
+
+
+class ReviewViewSet(generics.ListAPIView):
+    queryset = Review.objects.all()
+    serializer_class = ReviewSerializer
+    permission_classes = [AllowAny]
 
 
 class ServicesViewSet(generics.ListAPIView):
