@@ -16,7 +16,9 @@ Including another URLconf
 from django.conf.urls import url
 from django.contrib import admin
 from django.urls import include
-
+from django.conf.urls.static import static
+from rest_framework.urlpatterns import format_suffix_patterns
+from strelets import settings
 
 urlpatterns = [
     url(r'^jet/', include('jet.urls', 'jet')),
@@ -25,4 +27,5 @@ urlpatterns = [
     url(r'^auth/', include('base_user.urls')),
     url(r'^hotel/', include('hotel.urls')),
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
-]
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
