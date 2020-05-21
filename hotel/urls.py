@@ -4,6 +4,7 @@ from rest_framework.urlpatterns import format_suffix_patterns
 from django.conf.urls.static import static
 from strelets import settings
 
+
 app_name = 'hotel'
 
 urlpatterns = [
@@ -14,6 +15,6 @@ urlpatterns = [
     url(r'^createreview/$', views.CreateReviewViewSet.as_view(), name='Create review'),
     url(r'^booking/$', views.BookingViewSet.as_view(), name='Booking'),
     url(r'^userbooking/$', views.UserBookingViewSet.as_view(), name="Booking user"),
-    url(r'^question/$', views.QuestionsViewSet.as_view(), name='Questions')
+    url(r'^question/$', views.QuestionsViewSet.as_view(), name='Questions'),
 ]
 urlpatterns = format_suffix_patterns(urlpatterns)
